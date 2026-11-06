@@ -1,0 +1,48 @@
+# CI: the gatekeeper of the trunk.
+# In trunk-based development, `main` must always be releasable. This workflow runs on
+# every pull request into `main` (to block bad merges) and on every push to `main`
+# (to confirm the trunk itself is still green after a merge).
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# If you push again to the same PR, cancel the older run. Runs on `main` itself are never
+# cancelled, because later we'll deploy staging from them.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    # This name is what branch protection will require ("verify"). Keep it stable.
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - name: Set up Node (version from .nvmrc)
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies (exactly what package-lock.json says)
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
