@@ -24,19 +24,20 @@ Claude explains each step and writes the boilerplate.
   off), not by long-running hotfix branches.
 
 ## Phase 1: Repo and app skeleton
-- [ ] Create an empty **public** GitHub repo (public = free branch protection + environment rules)
-- [ ] Scaffold the Next.js app, make `main` the default branch, push
-- [ ] Protect `main`: require a PR and passing CI checks, block force pushes
+- [x] Create an empty **public** GitHub repo (public = free branch protection + environment rules)
+- [x] Scaffold the Next.js app, make `main` the default branch, push
+- [x] Protect `main`: require a PR and passing CI checks, block force pushes
 
 ## Phase 2: CI, the gatekeeper of the trunk
-- [ ] GitHub Actions workflow: lint, type-check, test, build on every PR and push to `main`
-- [ ] Your first trunk-based cycle: short branch → PR → green CI → merge → delete branch
+- [x] GitHub Actions workflow: lint, type-check, build on every PR and push to `main`
+- [x] Your first trunk-based cycle: short branch → PR → green CI → merge → delete branch
 
 ## Phase 3: Two environments
-- [ ] Two Render web services: `staging` and `production`, both with auto-deploy **off**
-- [ ] Push to `main` + CI green → GitHub Actions deploys **staging**
+- [x] Two Render web services: `staging` (Auto-Deploy: After CI Checks Pass) and `production` (Auto-Deploy: Off)
+- [ ] Merge to `main` + CI green → Render deploys **staging** automatically
 - [ ] Push a tag like `v0.1.0` → GitHub Actions deploys that exact commit to **production**
-- [ ] Each environment has its own environment variables
+- [x] Each environment has its own environment variables (`APP_ENV`)
+- [ ] Banner on every page shows the environment and deployed commit
 
 ## Phase 4: Feature flags built by hand
 - [ ] A small `flags` module: defaults in code, overrides from environment variables
@@ -63,3 +64,5 @@ Claude explains each step and writes the boilerplate.
 
 ## Progress log
 <!-- Add a line each time you finish a phase: date, what you did, what surprised you. -->
+- 2026-11-06: Phases 1–2 done. Learned: Git pushes commits, not files; squash-merge makes one commit per PR; a ruleset rejects direct pushes to `main`.
+- 2026-11-17: Render staging + production created.

@@ -9,6 +9,8 @@ on:
     branches: [main]
   push:
     branches: [main]
+  # Lets other workflows (release.yml) reuse these exact checks.
+  workflow_call:
 
 # If you push again to the same PR, cancel the older run. Runs on `main` itself are never
 # cancelled, because later we'll deploy staging from them.
